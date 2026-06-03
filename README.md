@@ -47,7 +47,7 @@ python -m src.training
 5. Run the API / application
 
 ```powershell
-python main.py
+python main.py api
 ```
 
 6. Run tests

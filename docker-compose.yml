@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  cattlecare-api:
+    build: .
+    container_name: cattlecare-ml-api
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python main.py api --host 0.0.0.0 --port 9000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
