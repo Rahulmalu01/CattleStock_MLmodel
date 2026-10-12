@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, ConfigDict, Field
+from typing import List, Optional, Literal
 
 
 class PredictionRequest(BaseModel):
@@ -8,7 +8,9 @@ class PredictionRequest(BaseModel):
     heart_rate: int = Field(..., description="Heart rate in beats per minute")
     respiratory_rate: int = Field(..., description="Respiratory rate per minute")
     steps: int = Field(..., description="Number of steps taken")
-    activity_level: str = Field(..., description="Activity level: normal, low, high")
+    activity_level: Literal["normal", "low", "high"] = Field(
+        ..., description="Activity level: normal, low, high"
+    )
     activity_duration_minutes: int = Field(..., description="Duration of activity in minutes")
     rumination_duration: int = Field(..., description="Rumination duration in minutes")
     rumination_episodes: int = Field(..., description="Number of rumination episodes")
@@ -18,8 +20,8 @@ class PredictionRequest(BaseModel):
     battery_level: int = Field(default=100, description="IoT sensor battery level")
     signal_strength: int = Field(default=100, description="Signal strength percentage")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "cattle_id": "COW_001",
                 "temperature": 39.8,
@@ -37,9 +39,12 @@ class PredictionRequest(BaseModel):
                 "signal_strength": 90
             }
         }
+    )
 
 
 class DiseaseInfo(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
     disease: str = Field(..., description="Predicted disease classification")
     confidence: float = Field(..., description="Confidence score 0-100")
     risk_level: str = Field(..., description="Risk level: low, medium, high")
@@ -58,6 +63,8 @@ class HealthCheckResponse(BaseModel):
 
 
 class ModelInfoResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
     model_version: str
     accuracy: float
     precision: float

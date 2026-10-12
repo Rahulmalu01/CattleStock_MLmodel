@@ -71,12 +71,13 @@ def test_preprocessor_categorical_encoding(sample_df):
 
 def test_preprocess_data(sample_df):
     """Test complete preprocessing pipeline."""
-    X, y, preprocessor = preprocess_data(sample_df)
+    X, y, preprocessor, target_encoder = preprocess_data(sample_df)
 
     assert X.shape[0] == sample_df.shape[0]
     assert X.shape[1] == sample_df.shape[1] - 1
     assert len(y) == sample_df.shape[0]
     assert preprocessor is not None
+    assert target_encoder is not None
 
 
 def test_preprocessor_consistency(sample_df):

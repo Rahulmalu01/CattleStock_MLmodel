@@ -1,7 +1,6 @@
 import sys
 sys.path.insert(0, '/c/Projects/mlmodel')
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from xgboost import XGBClassifier
@@ -86,21 +85,9 @@ def train_pipeline():
     X, y, preprocessor, target_encoder = preprocess_data(df)
     feature_names = preprocessor.feature_names
 
-    # --------------------------------------------------
-    # Encode target labels for XGBoost
-    # --------------------------------------------------
-    label_encoder = LabelEncoder()
-    y = label_encoder.fit_transform(y)
-
     print("\nClass Mapping:")
-    for idx, cls in enumerate(label_encoder.classes_):
+    for idx, cls in enumerate(target_encoder.classes_):
         print(f"{idx} -> {cls}")
-
-    # Save encoder
-    encoder_path = MODEL_PATH.parent / "label_encoder.pkl"
-    joblib.dump(label_encoder, encoder_path)
-    print(f"Label encoder saved: {encoder_path}")
-    # --------------------------------------------------
 
     # Train models
     print("\nTraining models...")

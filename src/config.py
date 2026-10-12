@@ -9,6 +9,7 @@ LOGS_DIR = BASE_DIR / "logs"
 DATASET_PATH = DATA_DIR / "dataset.csv"
 MODEL_PATH = MODELS_DIR / "model.joblib"
 PREPROCESSOR_PATH = MODELS_DIR / "preprocessor.joblib"
+TARGET_ENCODER_PATH = MODELS_DIR / "target_encoder.pkl"
 METADATA_PATH = MODELS_DIR / "model_metadata.json"
 DB_PATH = LOGS_DIR / "predictions.db"
 

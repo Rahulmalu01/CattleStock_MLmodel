@@ -22,9 +22,10 @@ def setup_models():
 
 @pytest.fixture
 def client():
-    """Create FastAPI test client."""
+    """Create FastAPI test client with startup/shutdown lifecycle."""
     from src.api import app
-    return TestClient(app)
+    with TestClient(app) as client:
+        yield client
 
 
 def test_root_endpoint(client):
@@ -151,9 +152,7 @@ def test_predict_endpoint_invalid_activity_level(client):
     }
 
     response = client.post("/predict", json=payload)
-    # Should either succeed with prediction (if encoder handles it)
-    # or fail with 400 error
-    assert response.status_code in [200, 400]
+    assert response.status_code == 422
 
 
 def test_stats_endpoint(client):

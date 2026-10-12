@@ -3,7 +3,7 @@ sys.path.insert(0, '/c/Projects/mlmodel')
 
 import pandas as pd
 import joblib
-from src.config import DISEASE_LABELS, MODEL_PATH, PREPROCESSOR_PATH, DISEASE_RECOMMENDATIONS
+from src.config import MODEL_PATH, PREPROCESSOR_PATH, TARGET_ENCODER_PATH, DISEASE_RECOMMENDATIONS
 from src.explainability import get_contributing_factors
 from src.schemas import DiseaseInfo
 
@@ -14,12 +14,15 @@ class PredictionEngine:
         self.load_model()
 
     def load_model(self):
-        """Load trained model and preprocessor."""
+        """Load trained model, preprocessor, and target encoder."""
         try:
             self.model = joblib.load(str(MODEL_PATH))
             self.preprocessor = joblib.load(str(PREPROCESSOR_PATH))
+            self.target_encoder = joblib.load(str(TARGET_ENCODER_PATH))
         except FileNotFoundError as e:
-            raise RuntimeError(f"Model or preprocessor not found. Train the model first. Error: {e}")
+            raise RuntimeError(
+                f"Model, preprocessor, or target encoder not found. Train the model first. Error: {e}"
+            )
 
     def predict(self, input_data: dict) -> DiseaseInfo:
         """Make prediction for a asingle cattle."""
@@ -32,13 +35,7 @@ class PredictionEngine:
 
         # Get prediction and confidence
         prediction_idx = self.model.predict(X_transformed)[0]
-        print("Raw Prediction:", prediction_idx)
-        print("Type:", type(prediction_idx))
-        prediction = DISEASE_LABELS.get(
-            int(prediction_idx),
-            "healthy"
-        )
-        print("Disease:", prediction)
+        prediction = self.target_encoder.inverse_transform([prediction_idx])[0]
         probabilities = self.model.predict_proba(X_transformed)[0]
         confidence = max(probabilities) * 100
 

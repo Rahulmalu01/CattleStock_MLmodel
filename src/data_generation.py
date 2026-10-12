@@ -14,7 +14,7 @@ def generate_disease_samples(disease: str, count: int) -> pd.DataFrame:
                 "heart_rate": np.random.uniform(60, 80),
                 "respiratory_rate": np.random.uniform(20, 30),
                 "steps": np.random.uniform(2500, 5000),
-                "activity_level": "normal",
+                "activity_level": np.random.choice(["normal", "high"], p=[0.7, 0.3]),
                 "activity_duration_minutes": np.random.uniform(360, 600),
                 "rumination_duration": np.random.uniform(400, 600),
                 "rumination_episodes": np.random.uniform(8, 12),

@@ -11,8 +11,8 @@ Brief machine learning project for data generation, preprocessing, training, pre
 2. Activate it and install packages: `pip install -r requirements.txt`
 
 ## Usage
-- Run the main application / API: `python main.py`
-- Train models: see `src/training.py`
+- Run the API: `python main.py api`
+- Train models: `python main.py train`
 - Make predictions: see `src/prediction.py`
 
 ## Execution
@@ -41,7 +41,7 @@ python -m src.data_generation
 4. Train the model
 
 ```powershell
-python -m src.training
+python main.py train
 ```
 
 5. Run the API / application

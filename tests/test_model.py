@@ -19,7 +19,8 @@ import tempfile
 def trained_model():
     """Create a trained model for testing."""
     df = generate_dataset()
-    X, y, preprocessor = preprocess_data(df)
+    X, y, preprocessor, target_encoder = preprocess_data(df)
+    assert target_encoder is not None
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y

@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, '/c/Projects/mlmodel')
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from src.config import API_TITLE, API_VERSION, MODEL_PATH, DATASET_PATH
@@ -13,10 +14,16 @@ from src.evaluation import load_metadata
 from src.data_generation import generate_dataset
 import json
 
+@asynccontextmanager
+async def lifespan(app):
+    initialize_app()
+    yield
+
 app = FastAPI(
     title=API_TITLE,
     version=API_VERSION,
-    description="Livestock disease prediction service for CattleCare platform"
+    description="Livestock disease prediction service for CattleCare platform",
+    lifespan=lifespan
 )
 
 # Initialize components
@@ -44,12 +51,6 @@ def initialize_app():
     except Exception as e:
         print(f"Warning: Could not load model: {e}")
         print("Please run training pipeline first.")
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize app on startup."""
-    initialize_app()
 
 
 @app.get("/", response_model=HealthCheckResponse)
